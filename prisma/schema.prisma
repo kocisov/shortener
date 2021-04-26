@@ -1,0 +1,29 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Token {
+  id        Int      @id @default(autoincrement())
+  name      String
+  value     String
+  slugs     Slug[]
+  createdAt DateTime @default(now())
+
+  @@map("tokens")
+}
+
+model Slug {
+  id        Int      @id @default(autoincrement())
+  tokenId   Int
+  name      String
+  url       String
+  token     Token    @relation(fields: [tokenId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@map("slugs")
+}
